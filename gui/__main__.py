@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import (
-    QApplication, 
-    QMainWindow, 
+    QApplication,
+    QMainWindow,
     QLabel,
     QSplitter,
 )
@@ -9,7 +9,10 @@ from PyQt6.QtCore import (
 )
 
 
-from gui.canvas.__main__ import OpenGLWidget as canvas 
+from gui.canvas.__main__ import OpenGLWidget as canvas
+
+# from gui.canvas.__main__ import Inspector as inspector
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -29,9 +32,9 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(spliter)
 
 
-
 if __name__ == "__main__":
     import sys
+
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
