@@ -21,7 +21,7 @@ parser_run.add_argument("path", type=str, help="path to the project folder")
 args = parser.parse_args()
 
 if args.command == "init":
-    print("creating file structure")
+    print("creating folder structure")
     project_path = Path(args.path).resolve()
     template_path = Path(__file__).resolve().parent / "template"
     print(f"Copying template files from {template_path} to {project_path}")
@@ -30,10 +30,9 @@ if args.command == "init":
 
 
 if args.command == "run":
-    print("running the game")
     project_path = args.path
     #get full project path
     project_path = Path(project_path).resolve()
-    print(f"running the game from {project_path}")
+    print(f"running the {project_path} game")
     os.system(f"cd {project_path} && python -m game")
     print("Done.")

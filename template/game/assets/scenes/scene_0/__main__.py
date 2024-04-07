@@ -1,4 +1,3 @@
-
 import sys
 import math
 
@@ -26,7 +25,7 @@ from OpenGL.GLUT import *
 class OpenGLWidget(QOpenGLWidget):
     def __init__(self, parent=None):
         super(OpenGLWidget, self).__init__(parent)
-        self.initUI()
+        # self.initUI()
 
         # Initialize view parameters
         self.zoom_factor = 1.0
@@ -34,19 +33,20 @@ class OpenGLWidget(QOpenGLWidget):
         self.translation_y = 0.0
 
     def initUI(self):
+        pass
         # glutInit()  # Move glutInit here
-        self.expression_line_edit = QLineEdit(self)
-        self.expression_line_edit.setPlaceholderText("Enter a function in terms of 'x' (e.g., sin(x) + x**2)")
+        # self.expression_line_edit = QLineEdit(self)
+        # self.expression_line_edit.setPlaceholderText("Enter a function in terms of 'x' (e.g., sin(x) + x**2)")
 
-        self.plot_button = QPushButton('Plot', self)
-        self.plot_button.clicked.connect(self.plotFunction)
+        # self.plot_button = QPushButton('Plot', self)
+        # self.plot_button.clicked.connect(self.plotFunction)
 
         # Connect returnPressed signal to plotFunction method
-        self.expression_line_edit.returnPressed.connect(self.plotFunction)
+        # self.expression_line_edit.returnPressed.connect(self.plotFunction)
 
-        layout = QVBoxLayout(self)
-        layout.addWidget(self.expression_line_edit)
-        layout.addWidget(self.plot_button)
+        # layout = QVBoxLayout(self)
+        # layout.addWidget(self.expression_line_edit)
+        # layout.addWidget(self.plot_button)
 
     def plotFunction(self):
         expression = self.expression_line_edit.text()
@@ -61,12 +61,12 @@ class OpenGLWidget(QOpenGLWidget):
 
     def initializeGL(self):
         glClearColor(1.0, 1.0, 1.0, 1.0)
-        # gluOrtho2D(-5.0, 5.0, -10.0, 10.0)  # Adjusted the range for centering
+        gluOrtho2D(-5.0, 5.0, -10.0, 10.0)  # Adjusted the range for centering
 
     def draw_function(self, expression):
-        glColor3f(0.0, 0.0, 0.0)
+        glColor3f(0.0, 1.0, 0.0)
         # change stroke
-        # glLineWidth(10.0)
+        glLineWidth(10.0)
 
         # Draw axes
         glBegin(GL_LINES)

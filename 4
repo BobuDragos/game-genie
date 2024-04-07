@@ -14,8 +14,7 @@ class sceneSelector(QWidget):
 
     def loadScene(self, scene_path):
         activeScene_path = scene_path
-        MainWindow.setActiveScene(activeScene_path)
-        print(f"{activeScene_path}")
+        print(f"{scene_path}")
 
     def __init__(self):
         super().__init__()
@@ -45,20 +44,13 @@ def setup():
 
 class MainWindow(QMainWindow):
 
-    def setActiveScene(scene_path):
-        # TODO: import dynamically
-        from game.assets.scenes.scene_0.__main__ import OpenGLWidget as canvas
-
-        self.splitter.addWidget(canvas)
-
-
     def __init__(self):
         super().__init__()
         self.splitter = QSplitter()
 
-        self.splitter.addWidget(sceneSelector())
+        splitter.addWidget(sceneSelector())
 
-        self.setCentralWidget(self.splitter)
+        self.setCentralWidget(splitter)
 
 
 if __name__ == "__main__":
