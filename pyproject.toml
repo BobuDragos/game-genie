@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "game_genie"
+version = "0.0.3"
+authors = [
+  { name="dragos bobu", email="bobudragos10@hotmail.com" },
+]
+description = "a python game engine"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/bobudragos/functional-game-engine"
+Issues = "https://github.com/bobudragos/functional-game-engine/issues"
+
