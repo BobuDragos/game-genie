@@ -18,21 +18,27 @@
 #include <stdio.h>
 #include <math.h>
 
+// Include GLEW. Always include it before gl.h and glfw3.h, since it's a bit magic.
+#include <GL/glew.h>
+// Include GLFW
+#include <GLFW/glfw3.h>
+// Include GLM
+#include <glm/glm.hpp>
+using namespace glm;
+
 #include <GL/glut.h>
 #include <GL/freeglut.h>
 
 #include <cmath>
 
-
+#include "goManager.cpp"
 
 // dimensiunea ferestrei in pixeli
 #define dim 300
 
 unsigned char prevKey;
 
-enum EObiect {cubw, cubs, sferaw, sferas} ob = cubw;
-
-void DisplayAxe() {
+void drawAxis() {
   int length = 200;
 
   glLineWidth(2);
@@ -59,82 +65,83 @@ void DisplayAxe() {
   glEnd();
 
   glLineWidth(1);
+
 }
 
-// cub wireframe
-void Display1() {
-   glColor3f(1,0,0);
-   glutWireCube(1);
-}
-
-// cub solid
-void Display2() {
-   glColor3f(1,0,0);
-   glutSolidCube(1);
-}
-
-// sfera wireframe
-void Display3() {
-   glColor3f(0,0,1);
-   glutWireSphere(1, 10, 10);
-}
-
-// sfera solida
-void Display4() {
-   glColor3f(0,0,1);
-   glutSolidSphere(1, 10, 10);
-}
-
-void DisplayObiect()
-{
-  switch (ob)
-  {
-  case cubw:
-    Display1();
-    break;
-  case cubs:
-    Display2();
-    break;
-  case sferaw:
-    Display3();
-    break;
-  case sferas:
-    Display4();
-    break;
-  default:
-    break;
-  }
-}
-
-// rotatia cu un unghi de 10 grade in raport cu axa x
-void DisplayX() {
-  glMatrixMode(GL_MODELVIEW);
-  glRotated(10,1,0,0);
-}
-
-// rotatia cu un unghi de 10 grade in raport cu axa y
-void DisplayY() {
-  glMatrixMode(GL_MODELVIEW);
-  glRotated(10,0,1,0);
-}
-
-// rotatia cu un unghi de 10 grade in raport cu axa z
-void DisplayZ() {
-  glMatrixMode(GL_MODELVIEW);
-  glRotated(10,0,0,1);
-}
-
-// Translatia cu 0.2, 0.2, 0.2
-void DisplayT() {
-  glMatrixMode(GL_MODELVIEW);
-  glTranslatef(0.2, 0.2, 0.2);
-}
-
-// Scalarea cu 1.2, 1.2, 1.2
-void DisplayS() {
-  glMatrixMode(GL_MODELVIEW);
-  glScalef(1.2, 1.2, 1.2);
-}
+// // cub wireframe
+// void Display1() {
+//    glColor3f(1,0,0);
+//    glutWireCube(1);
+// }
+//
+// // cub solid
+// void Display2() {
+//    glColor3f(1,0,0);
+//    glutSolidCube(1);
+// }
+//
+// // sfera wireframe
+// void Display3() {
+//    glColor3f(0,0,1);
+//    glutWireSphere(1, 10, 10);
+// }
+//
+// // sfera solida
+// void Display4() {
+//    glColor3f(0,0,1);
+//    glutSolidSphere(1, 10, 10);
+// }
+//
+// void DisplayObiect()
+// {
+//   switch (ob)
+//   {
+//   case cubw:
+//     Display1();
+//     break;
+//   case cubs:
+//     Display2();
+//     break;
+//   case sferaw:
+//     Display3();
+//     break;
+//   case sferas:
+//     Display4();
+//     break;
+//   default:
+//     break;
+//   }
+// }
+//
+// // rotatia cu un unghi de 10 grade in raport cu axa x
+// void DisplayX() {
+//   glMatrixMode(GL_MODELVIEW);
+//   glRotated(10,1,0,0);
+// }
+//
+// // rotatia cu un unghi de 10 grade in raport cu axa y
+// void DisplayY() {
+//   glMatrixMode(GL_MODELVIEW);
+//   glRotated(10,0,1,0);
+// }
+//
+// // rotatia cu un unghi de 10 grade in raport cu axa z
+// void DisplayZ() {
+//   glMatrixMode(GL_MODELVIEW);
+//   glRotated(10,0,0,1);
+// }
+//
+// // Translatia cu 0.2, 0.2, 0.2
+// void DisplayT() {
+//   glMatrixMode(GL_MODELVIEW);
+//   glTranslatef(0.2, 0.2, 0.2);
+// }
+//
+// // Scalarea cu 1.2, 1.2, 1.2
+// void DisplayS() {
+//   glMatrixMode(GL_MODELVIEW);
+//   glScalef(1.2, 1.2, 1.2);
+// }
 
 void Init(void) {
   glClearColor(1, 1, 1, 1);
@@ -156,6 +163,7 @@ v 0.0 0.0 0.0  # 1 a
 v 0.0 1.0 0.0  # 2 b
 v 1.0 1.0 0.0  # 3 c
 v 1.0 0.0 0.0  # 4 d
+
 v 0.0 0.0 1.0  # 5 e
 v 0.0 1.0 1.0  # 6 f
 v 1.0 1.0 1.0  # 7 g
@@ -165,85 +173,101 @@ v 1.0 0.0 1.0  # 8 h
 void renderCube(int x, int y, int z)
 {
 
+  glPushMatrix();
+  glTranslatef(x, y, z);
+  // glRotated(x * 90,0,0,0);
   glBegin(GL_QUADS);
     glVertex3f(0.0, 0.0, 0.0);
     glVertex3f(0.0, 1.0, 0.0);
     glVertex3f(1.0, 1.0, 0.0);
     glVertex3f(1.0, 0.0, 0.0);
+
+    glVertex3f(0.0, 0.0, 1.0);
+    glVertex3f(0.0, 1.0, 1.0);
+    glVertex3f(1.0, 1.0, 0.0);
+    glVertex3f(1.0, 0.0, 1.0);
   glEnd();
+  glPopMatrix();
 }
 
 void Display(void) {
 
-  DisplayAxe();
+  // drawAxis();
+  // // for every gameobject:
+  // for (int i=0; i <= 1; i++)
+  // {
+  //   renderCube(0,0,0);
+  //   renderCube(1,1,1);
+  //   renderCube(2,2,2);
+  //   renderCube(3,3,3);
+  //   renderCube(9,9,9);
+  // }
 
-  // for every gameobject:
-  for (int i=0; i <= 1; i++)
-  {
-    renderCube(0,0,0);
-  }
 
-  switch(prevKey) 
-  {
-  // case 'a':
-  //   DisplayAxe();
+  // render(0);
+  glCallList(loadObj("go_0/mesh.obj"));
+
+  // switch(prevKey) 
+  // {
+  // // case 'a':
+  // //   DisplayAxe();
+  // //   break;
+  // case '0':
+  //   glClear(GL_COLOR_BUFFER_BIT);
+  //   glMatrixMode(GL_MODELVIEW);
+  //   glLoadIdentity();
+  //   glRotated(20, 1, 0, 0);
+  //   glRotated(-20, 0, 1, 0);
   //   break;
-  case '0':
-    glClear(GL_COLOR_BUFFER_BIT);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glRotated(20, 1, 0, 0);
-    glRotated(-20, 0, 1, 0);
-    break;
-  case '1':
-    Display1();
-    ob = cubw;
-    break;
-  case '2':
-    Display2();
-    ob = cubs;
-    break;
-  case '3':
-    Display3();
-    ob = sferaw;
-    break;
-  case '4':
-    Display4();
-    ob = sferas;
-    break;
-  case 'x':
-    // glClear(GL_COLOR_BUFFER_BIT);
-    DisplayX();
-    DisplayAxe();
-    // DisplayObiect();
-    break;
-  case 'y':
-    glClear(GL_COLOR_BUFFER_BIT);
-    DisplayY();
-    DisplayAxe();
-    DisplayObiect();
-    break;
-  case 'z':
-    glClear(GL_COLOR_BUFFER_BIT);
-    DisplayZ();
-    DisplayAxe();
-    DisplayObiect();
-    break;
-  case 't':
-    glClear(GL_COLOR_BUFFER_BIT);
-    DisplayT();
-    DisplayAxe();
-    DisplayObiect();
-    break;
-  case 's':
-    glClear(GL_COLOR_BUFFER_BIT);
-    DisplayS();
-    DisplayAxe();
-    DisplayObiect();
-    break;
-  default:
-    break;
-  }
+  // case '1':
+  //   Display1();
+  //   ob = cubw;
+  //   break;
+  // case '2':
+  //   Display2();
+  //   ob = cubs;
+  //   break;
+  // case '3':
+  //   Display3();
+  //   ob = sferaw;
+  //   break;
+  // case '4':
+  //   Display4();
+  //   ob = sferas;
+  //   break;
+  // case 'x':
+  //   // glClear(GL_COLOR_BUFFER_BIT);
+  //   DisplayX();
+  //   DisplayAxe();
+  //   // DisplayObiect();
+  //   break;
+  // case 'y':
+  //   glClear(GL_COLOR_BUFFER_BIT);
+  //   DisplayY();
+  //   DisplayAxe();
+  //   DisplayObiect();
+  //   break;
+  // case 'z':
+  //   glClear(GL_COLOR_BUFFER_BIT);
+  //   DisplayZ();
+  //   DisplayAxe();
+  //   DisplayObiect();
+  //   break;
+  // case 't':
+  //   glClear(GL_COLOR_BUFFER_BIT);
+  //   DisplayT();
+  //   DisplayAxe();
+  //   DisplayObiect();
+  //   break;
+  // case 's':
+  //   glClear(GL_COLOR_BUFFER_BIT);
+  //   DisplayS();
+  //   DisplayAxe();
+  //   DisplayObiect();
+  //   break;
+  // default:
+  //   break;
+  // }
   glutSwapBuffers();
 }
 
@@ -273,6 +297,10 @@ void MouseFunc(int button, int state, int x, int y) {
       "stang" : 
       ((button == GLUT_RIGHT_BUTTON) ? "drept": "mijlociu"),
       x, y);
+}
+void loop(){
+  glClear(GL_COLOR_BUFFER_BIT);
+  Display();
 }
 
 int main(int argc, char** argv) {
@@ -349,7 +377,7 @@ int main(int argc, char** argv) {
    // sau la apelul functiei
    // void glutPostRedisplay (void).
    glutDisplayFunc(Display);
-   
+
    // Functia void glutMainLoop() lanseaza bucla de procesare
    // a evenimentelor GLUT. Din bucla se poate iesi doar prin
    // inchiderea ferestrei aplicatiei. Aceasta functie trebuie
@@ -359,6 +387,7 @@ int main(int argc, char** argv) {
    // Cand coada de evenimente este vida atunci este executata
    // functia callback IdleFunc inregistrata prin apelul functiei
    // void glutIdleFunc (void (*IdleFunc) (void))
+   glutIdleFunc(Display);
    glutMainLoop();
    return 0;
 }
